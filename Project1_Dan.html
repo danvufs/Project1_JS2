@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1- Dan Vu</title>
+        <style type="text/css">
+            
+            #title
+            {
+                font-size: 18px;
+                color: rgb(255, 60, 0);
+                text-align: center;
+            }
+
+            body
+            {
+                background-color: #faf4f4;
+                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 14px;
+                line-height: 20px;
+                background-image: url("background.jpg");
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            #outerwrap
+            {
+                width:600px;
+                padding: 10px 5px 5px 15px;
+                border: 1px solid rgb(255, 60, 0);
+                margin: 36px auto;
+            }
+            
+            #datewrap
+            {
+                float:left;  
+                width: 40%;
+            }
+            #datetitles
+            {
+                float: left;
+            }
+             .dropDown
+            {
+                display:inline-block;
+                width: 40%;
+            }
+            
+            #retrievewrap
+            {
+                float:left;  
+                margin-left: -5px;
+            }
+            #resultstitle
+            {               
+                clear:both;
+                font-size: 13px;
+                color: white;
+            }
+            #resultswrap
+            {   
+                clear:left;
+                width: 100%;
+            }
+            #resulttext
+            {
+                float: left;
+                line-height: 2 ;
+            }
+            #resulttexttextbox
+            {
+                position: relative;
+                left: 10px; 
+            }
+            .results
+            {
+                width:65%;
+
+            }
+            ul
+            {
+                margin: 0px 0px 0px -4px;
+                list-style: none; 
+                padding-right:10px;
+            }
+            li
+            {
+                line-height: 2; 
+                text-align: right;
+            }
+            p
+            {
+                display: inline; 
+                padding-right: 30px;
+                color: white;
+            }
+			.BtnButton 
+            {
+                border: 1px solid rgb(255, 60, 0);
+				color: rgb(255, 60, 0);
+				height: 25px;
+				cursor: pointer;
+                border-radius: 4px;
+                transition-duration: 0.4s;
+                cursor: pointer;
+			}
+			.BtnButton:hover 
+            {
+                background-color: rgb(255, 60, 0);
+                color: white;
+            }
+            #saveChanges
+            {
+                float:right;
+            }
+
+		</style>
+		<script language="JavaScript" type="text/JavaScript">
+        //Create variables:
+        //game number
+        let gameNum = 0;
+        // return code values from requests
+		const ISFINISHED = 4;
+        //sucessful request
+		const ISOK = 200;
+        //JSON object
+        let jsObject = " ";
+        //array to hold new data
+        let newData = [];
+        //Create dropdownPublic function to create dropdown menu
+        function dropdownPublic()
+            {
+                //Create arrays for the dropdown options: year, month, day
+                let yearArray = ["2016", "2017", "2018"];// 
+                let monthArray = ["01","02","03","04","05","06","07","08","09","10","11","12"]; 
+                let dayArray = ["01","02","03","04","05","06","07","08","09","10","11","12", "13", "14", "15","16","17", "18","19","20","21","22", "23", "24", "25","26","27","28","29","30","31"]; 
+                
+                //add a new default option at index 0 that will be blank when the user opens the page
+                document.getElementById("year").options[0] = new Option("");
+                document.getElementById("month").options[0] = new Option("");
+                document.getElementById("day").options[0] = new Option("");
+
+                //Create a loop to add the options to the dropdown box
+                for (let i = 0; i < yearArray.length; i++)
+                {
+                    document.getElementById("year").options[i+1] = new Option(yearArray[i]);
+                }
+                for (let i = 0; i < monthArray.length; i++)
+                {
+                    document.getElementById("month").options[i+1] = new Option(monthArray[i]);
+                }
+                for (let i = 0; i < dayArray.length; i++)
+                {
+                    document.getElementById("day").options[i+1] = new Option(dayArray[i]);
+                }
+            }
+        
+        //Create a function to get the JSON data from the server
+        function getJSONAsync(url) 
+        {
+			var request = new XMLHttpRequest();//create a new request
+			request.onreadystatechange = function ()
+            {
+				//if the request is finished and the status is ok
+                if (request.readyState === ISFINISHED && request.status === ISOK)
+                {
+					//parse the JSON data
+                    let response = JSON.parse(request.responseText);
+                    //check to see if the data is undefined
+                    if( !response.data.games.game || response.data.games.game === undefined )
+                    {
+                        //alert user
+                        alert ("There is no game information for the date you selected. \nPlease select a different date.");
+                        //Clear the all the text boxes
+                        document.getElementById("gameNumber").value = "";
+                        document.getElementById("homeTeamName").value = "";
+                        document.getElementById("awayTeamName").value = "";
+                        document.getElementById("winningPitch").value = "";
+                        document.getElementById("losingPitch").value = "";
+                        document.getElementById("venue").value = "";
+                        document.getElementById("year").value = "";
+                        document.getElementById("month").value = "";
+                        document.getElementById("day").value = "";
+                    }
+                    else
+                    {
+                        //if there is game information then set the global variable to the response
+                        jsObject = response;
+                        //call the function to populate the textboxes with the data from the JSON
+                        getBaseballData();
+                    }
+                }
+            }
+			// open a connection using the URL
+			request.open("GET", url);
+			// send the GET request
+			request.send();
+		}
+
+        //Create a function to get JSON data from the server
+        function getBaseballDataAsync()
+        {
+            //variable to get the year, month, and day from the dropdown boxes
+            let year = document.getElementById("year").value;
+            let month = document.getElementById("month").value;
+            let day = document.getElementById("day").value;
+            //test to see if the user has selected a year, month and day. if not, then alert the user and return
+            if (year === "" || month === "" || day === "")
+            {
+                alert("Please select all three dropdown boxes.");
+                return;
+            }
+            //create the URL for the baseball data
+            let tempURL = "http://gd2.mlb.com/components/game/mlb/year_" + year + "/month_" + month + "/day_" + day + "/master_scoreboard.json";
+            //call the function to get the JSON data
+            getJSONAsync(tempURL);
+        }
+
+        //Create function to get the next game data
+        function nextGame()
+            {
+                //when reached the end of the array, go back to the first game
+                if(gameNum == jsObject.data.games.game.length-1)
+                {
+                    alert ("This is the last game of the day!");
+                    return false;//return false to stop the function
+                }
+                    //increment the game number
+                    getBaseballData(++gameNum);
+            }
+        //Create function to get the previous game data
+        function previousGame()
+            {
+                //when reached the beginning of the array, go back to the last game
+                if (gameNum == 0 )
+                {
+                    alert ("This is the first game of the day!");
+                    return false;//return false to stop the function
+                }
+                //decrement the game number
+                getBaseballData(--gameNum);
+            }
+        
+        //Create function to get the game data from the JSON and populate the textboxes
+        function getBaseballData()
+        {
+            //get the json data for the baseball game data
+            let homeTeam = jsObject.data.games.game[gameNum].home_team_name;
+            let awayTeam = jsObject.data.games.game[gameNum].away_team_name;
+            let winfirst = jsObject.data.games.game[gameNum].winning_pitcher.first;
+            let winlast = jsObject.data.games.game[gameNum].winning_pitcher.last;
+            let lostFirst = jsObject.data.games.game[gameNum].losing_pitcher.first;
+            let lostLast = jsObject.data.games.game[gameNum].losing_pitcher.last;
+            let venue = jsObject.data.games.game[gameNum].venue;
+           
+            //populate the textboxes
+            document.getElementById("homeTeamName").value = homeTeam;
+            document.getElementById("awayTeamName").value = awayTeam;
+            document.getElementById("winningPitch").value = winfirst + " " + winlast;
+            document.getElementById("losingPitch").value = lostFirst + " " + lostLast;
+            document.getElementById("venue").value = venue;
+            document.getElementById("gameNumber").value = "Game #" + (gameNum + 1) + " of " + jsObject.data.games.game.length; 
+        }
+
+        /*function to save the game data: copy the contents of all the text boxes back into the appropriate properties in the JavaScript game array for the current game.
+        function saveChanges()
+        {
+            //Retrieve the values from the textboxes
+            let homeTeam = document.getElementById("homeTeamName").value;
+            let awayTeam = document.getElementById("awayTeamName").value;
+            //split the winning pitcher name into first and last name
+            let winFirst = document.getElementById("winningPitch").value.split(" ")[0];
+            let winLast = document.getElementById("winningPitch").value.split(" ")[1];
+            //split the losing pitcher name into first and last name
+            let lostFirst = document.getElementById("losingPitch").value.split(" ")[0];
+            let lostLast = document.getElementById("losingPitch").value.split(" ")[1];
+            let venue = document.getElementById("venue").value;
+            //update the game array with the new values
+            jsObject.data.games.game[gameNum].home_team_name = homeTeam;
+            jsObject.data.games.game[gameNum].away_team_name = awayTeam;
+            jsObject.data.games.game[gameNum].winning_pitcher.first = winFirst;
+            jsObject.data.games.game[gameNum].winning_pitcher.last = winLast;
+            jsObject.data.games.game[gameNum].losing_pitcher.first = lostFirst;
+            jsObject.data.games.game[gameNum].losing_pitcher.last = lostLast;
+            jsObject.data.games.game[gameNum].venue = venue;
+
+            //alert the user that the data has been saved
+            alert("The data has been saved.");
+
+        }*/
+
+        //save changes function: copy the contents of all the text boxes back into the appropriate properties in the JavaScript game array for the current game.
+        function saveChanges()
+        {
+            //Create a variables to get the values from the textboxes
+            let homeTeam = document.getElementById("homeTeamName").value;
+            let awayTeam = document.getElementById("awayTeamName").value;
+            let winFirst = document.getElementById("winningPitch").value;
+            let winLast = document.getElementById("losingPitch").value;
+            let venue = document.getElementById("venue").value;
+            let year = document.getElementById("year").value;
+            let month = document.getElementById("month").value;
+            let day = document.getElementById("day").value;
+            //update the game array with the new values
+            newData = ["Date:" + year + "-" + month + "-" + day, "Home Team: " + homeTeam, "Away Team: " + awayTeam, "Winning Pitcher: " + winFirst, "Losing Pitcher: " + winLast, "Venue:" + venue];
+            //save the newData to the browser's local storage
+            localStorage.setItem("game" + gameNum, JSON.stringify(newData));
+            //alert the user that the data has been saved
+            alert("The data has been saved to localStorage.");
+            
+            //localStorage.clear();//I can use it to clear the local storage when I want to test the program
+
+        }
+
+		</script>
+	</head>
+    <!-- HTML elements attached to javascript event handlers below-->
+	<body onload="dropdownPublic(); ">
+        <div id="outerwrap">
+        <div id="title"><h1>Major League Baseball Form</h1></div>
+        <div id="datewrap">
+        <div id="datetitles">
+            <p>Year</p>
+            <br /><br />
+            <p>Month</p>
+            <br /><br />
+            <p>Day </p>
+            <br /><br />
+        </div>
+        <div id="dateTextboxes">
+        <select id="year" class="dropDown" ></select>
+        <br /><br />
+        <select id="month" class="dropDown"></select>
+        <br /><br />
+        <select id="day" class="dropDown" ></select>
+        </div>
+        </div>
+    <div id="retrievewrap">
+    <input type="button" id="btnAsync" class= "BtnButton" value="Retrieve" onclick="getBaseballDataAsync();"/>
+        <br /><br/>
+    </div>
+    <div id="resultstitle"><h2>Game Information</h2></div>
+    <div id="resultswrap">
+    <div id="resulttext">
+        <p>Game Number</p><br />
+        <p>Home Team Name</p><br />
+        <p>Away Team Name</p><br />
+        <p>Winning Pitcher</p><br />
+        <p>Losing Pitcher</p><br />
+        <p>Venue</p><br />
+    </div>
+    <div id="resulttexttextbox">
+    <ul>
+    <li><input type="text" id="gameNumber" class="results"/></li>
+    <li><input type="text" id="homeTeamName" class="results"/></li>
+    <li><input type="text" id="awayTeamName" class="results"/></li>
+    <li><input type="text" id="winningPitch" class="results"/></li>
+    <li><input type="text" id="losingPitch" class="results"/></li>
+    <li><input type="text" id="venue" class="results"/></li>
+    </ul>
+    </div>
+	<br /><br />
+    <input type="button" id="prevGame" class= "BtnButton" value="Previous Game" onclick="previousGame();"/>
+    <input type="button" id="nextGame" class= "BtnButton" value="Next Game" onclick="nextGame();"/>
+    <input type="button" id="saveChanges" class= "BtnButton" value="Save Changes" onclick="saveChanges();"/>
+    </div>
+    </div>
+	</body>
+</html>
