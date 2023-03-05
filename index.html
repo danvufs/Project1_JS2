@@ -1,122 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project 1- Dan Vu</title>
-        <style type="text/css">
-            
-            #title
-            {
-                font-size: 18px;
-                color: rgb(255, 60, 0);
-                text-align: center;
+    <style type="text/css">
+        #title {
+            font-size: 18px;
+            color: rgb(255, 60, 0);
+            text-align: center;
+        }
+
+        body {
+            background-color: #faf4f4;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+            background-image: url("background.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        #outerwrap {
+            width: 600px;
+            padding: 10px 5px 5px 15px;
+            border: 1px solid rgb(255, 60, 0);
+            margin: 36px auto;
+        }
+
+        #datewrap {
+            float: left;
+            width: 40%;
+        }
+
+        #datetitles {
+            float: left;
+        }
+
+        .dropDown {
+            display: inline-block;
+            width: 40%;
+        }
+
+        #retrievewrap {
+            float: left;
+            margin-left: -5px;
+        }
+
+        #resultstitle {
+            clear: both;
+            font-size: 13px;
+            color: white;
+        }
+
+        #resultswrap {
+            clear: left;
+            width: 100%;
+        }
+
+        #resulttext {
+            float: left;
+            line-height: 2;
+        }
+
+        #resulttexttextbox {
+            position: relative;
+            left: 10px;
+        }
+
+        .results {
+            width: 65%;
+
+        }
+
+        ul {
+            margin: 0px 0px 0px -4px;
+            list-style: none;
+            padding-right: 10px;
+        }
+
+        li {
+            line-height: 2;
+            text-align: right;
+        }
+
+        p {
+            display: inline;
+            padding-right: 30px;
+            color: white;
+        }
+
+        .BtnButton {
+            border: 1px solid rgb(255, 60, 0);
+            color: rgb(255, 60, 0);
+            height: 25px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .BtnButton:hover {
+            background-color: rgb(255, 60, 0);
+            color: white;
+        }
+
+        #saveChanges {
+            float: right;
+        }
+
+        /* Responsive styling */
+        @media screen and (max-width: 600px) {
+            #outerwrap {
+                max-width: 90%;
             }
 
-            body
-            {
-                background-color: #faf4f4;
-                font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-size: 14px;
-                line-height: 20px;
-                background-image: url("background.jpg");
-                background-repeat: no-repeat;
-                background-size: cover;
+            h1 {
+                font-size: 25px;
             }
-            #outerwrap
-            {
-                width:600px;
-                padding: 10px 5px 5px 15px;
-                border: 1px solid rgb(255, 60, 0);
-                margin: 36px auto;
-            }
-            
-            #datewrap
-            {
-                float:left;  
-                width: 40%;
-            }
-            #datetitles
-            {
-                float: left;
-            }
-             .dropDown
-            {
-                display:inline-block;
-                width: 40%;
-            }
-            
-            #retrievewrap
-            {
-                float:left;  
-                margin-left: -5px;
-            }
-            #resultstitle
-            {               
-                clear:both;
-                font-size: 13px;
-                color: white;
-            }
-            #resultswrap
-            {   
-                clear:left;
-                width: 100%;
-            }
-            #resulttext
-            {
-                float: left;
-                line-height: 2 ;
-            }
-            #resulttexttextbox
-            {
-                position: relative;
-                left: 10px; 
-            }
-            .results
-            {
-                width:65%;
 
-            }
-            ul
-            {
+            ul {
+                padding-right: 10;
                 margin: 0px 0px 0px -4px;
-                list-style: none; 
-                padding-right:10px;
-            }
-            li
-            {
-                line-height: 2; 
-                text-align: right;
-            }
-            p
-            {
-                display: inline; 
-                padding-right: 30px;
-                color: white;
-            }
-			.BtnButton 
-            {
-                border: 1px solid rgb(255, 60, 0);
-				color: rgb(255, 60, 0);
-				height: 25px;
-				cursor: pointer;
-                border-radius: 4px;
-                transition-duration: 0.4s;
-                cursor: pointer;
-			}
-			.BtnButton:hover 
-            {
-                background-color: rgb(255, 60, 0);
-                color: white;
-            }
-            #saveChanges
-            {
-                float:right;
             }
 
-		</style>
-		<script language="JavaScript" type="text/JavaScript">
+            .results {
+                width: 60%;
+            }
+        }
+
+        @media screen and (max-width: 400px) {
+            td {
+                min-width: 100px;
+            }
+
+            .results {
+                width: 50%;
+            }
+
+            .BtnButton {
+                height: 20px;
+                margin-left: 2px;
+            }
+
+            input#btnAsync.BtnButton {
+                margin-left: 55px;
+            }
+        }
+    </style>
+    <script language="JavaScript" type="text/JavaScript">
         //Create variables:
         //game number
         let gameNum = 0;
@@ -314,57 +348,63 @@
         }
 
 		</script>
-	</head>
-    <!-- HTML elements attached to javascript event handlers below-->
-	<body onload="dropdownPublic(); ">
-        <div id="outerwrap">
-        <div id="title"><h1>Major League Baseball Form</h1></div>
+</head>
+<!-- HTML elements attached to javascript event handlers below-->
+
+<body onload="dropdownPublic(); ">
+    <div id="outerwrap">
+        <div id="title">
+            <h1>Major League Baseball Form</h1>
+        </div>
         <div id="datewrap">
-        <div id="datetitles">
-            <p>Year</p>
-            <br /><br />
-            <p>Month</p>
-            <br /><br />
-            <p>Day </p>
+            <div id="datetitles">
+                <p>Year</p>
+                <br /><br />
+                <p>Month</p>
+                <br /><br />
+                <p>Day </p>
+                <br /><br />
+            </div>
+            <div id="dateTextboxes">
+                <select id="year" class="dropDown"></select>
+                <br /><br />
+                <select id="month" class="dropDown"></select>
+                <br /><br />
+                <select id="day" class="dropDown"></select>
+            </div>
+        </div>
+        <div id="retrievewrap">
+            <input type="button" id="btnAsync" class="BtnButton" value="Retrieve" onclick="getBaseballDataAsync();" />
             <br /><br />
         </div>
-        <div id="dateTextboxes">
-        <select id="year" class="dropDown" ></select>
-        <br /><br />
-        <select id="month" class="dropDown"></select>
-        <br /><br />
-        <select id="day" class="dropDown" ></select>
+        <div id="resultstitle">
+            <h2>Game Information</h2>
         </div>
+        <div id="resultswrap">
+            <div id="resulttext">
+                <p>Game Number</p><br />
+                <p>Home Team Name</p><br />
+                <p>Away Team Name</p><br />
+                <p>Winning Pitcher</p><br />
+                <p>Losing Pitcher</p><br />
+                <p>Venue</p><br />
+            </div>
+            <div id="resulttexttextbox">
+                <ul>
+                    <li><input type="text" id="gameNumber" class="results" /></li>
+                    <li><input type="text" id="homeTeamName" class="results" /></li>
+                    <li><input type="text" id="awayTeamName" class="results" /></li>
+                    <li><input type="text" id="winningPitch" class="results" /></li>
+                    <li><input type="text" id="losingPitch" class="results" /></li>
+                    <li><input type="text" id="venue" class="results" /></li>
+                </ul>
+            </div>
+            <br /><br />
+            <input type="button" id="prevGame" class="BtnButton" value="Previous Game" onclick="previousGame();" />
+            <input type="button" id="nextGame" class="BtnButton" value="Next Game" onclick="nextGame();" />
+            <input type="button" id="saveChanges" class="BtnButton" value="Save Changes" onclick="saveChanges();" />
         </div>
-    <div id="retrievewrap">
-    <input type="button" id="btnAsync" class= "BtnButton" value="Retrieve" onclick="getBaseballDataAsync();"/>
-        <br /><br/>
     </div>
-    <div id="resultstitle"><h2>Game Information</h2></div>
-    <div id="resultswrap">
-    <div id="resulttext">
-        <p>Game Number</p><br />
-        <p>Home Team Name</p><br />
-        <p>Away Team Name</p><br />
-        <p>Winning Pitcher</p><br />
-        <p>Losing Pitcher</p><br />
-        <p>Venue</p><br />
-    </div>
-    <div id="resulttexttextbox">
-    <ul>
-    <li><input type="text" id="gameNumber" class="results"/></li>
-    <li><input type="text" id="homeTeamName" class="results"/></li>
-    <li><input type="text" id="awayTeamName" class="results"/></li>
-    <li><input type="text" id="winningPitch" class="results"/></li>
-    <li><input type="text" id="losingPitch" class="results"/></li>
-    <li><input type="text" id="venue" class="results"/></li>
-    </ul>
-    </div>
-	<br /><br />
-    <input type="button" id="prevGame" class= "BtnButton" value="Previous Game" onclick="previousGame();"/>
-    <input type="button" id="nextGame" class= "BtnButton" value="Next Game" onclick="nextGame();"/>
-    <input type="button" id="saveChanges" class= "BtnButton" value="Save Changes" onclick="saveChanges();"/>
-    </div>
-    </div>
-	</body>
+</body>
+
 </html>
